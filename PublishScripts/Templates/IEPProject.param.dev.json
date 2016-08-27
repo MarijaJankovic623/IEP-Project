@@ -1,0 +1,29 @@
+{
+  "siteName": {
+    "value": "IEP-Project"
+  },
+  "hostingPlanName": {
+    "value": "jm130623d"
+  },
+  "siteLocation": {
+    "value": "North Europe"
+  },
+  "sku": {
+    "value": "Free"
+  },
+  "workerSize": {
+    "value": "0"
+  },
+  "siteMode": {
+    "value": "Limited"
+  },
+  "computeMode": {
+    "value": "0"
+  },
+  "subscriptionId": {
+    "value": "99d7ff18-9e91-41d4-b696-57ca85789659"
+  },
+  "resourceGroup": {
+    "value": "jm130623d_resources"
+  }
+}
