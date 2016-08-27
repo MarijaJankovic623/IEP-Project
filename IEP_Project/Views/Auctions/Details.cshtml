@@ -1,0 +1,94 @@
+﻿using  System.Web.Mvc;
+
+@model IEP_Project.Models.Auction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Auction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.productName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.productName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)"  style="max-width:150px; max-height:150px"/>
+         
+           
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.initialPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.initialPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.currentPriceRaise)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.currentPriceRaise)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.duration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.duration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.creatingDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.creatingDateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.startingDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.startingDateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.finishingDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.finishingDateTime)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
