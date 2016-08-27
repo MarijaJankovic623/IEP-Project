@@ -222,8 +222,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\IEP-Project %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\IEP-Project %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\IEP-Project.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
