@@ -37,8 +37,13 @@ namespace IEP_Project.Models
         {
         }
 
+        public DbSet<Auction> Auctions { get; set; }
+
         public static ApplicationDbContext Create()
         {
+
+       
+       
             return new ApplicationDbContext();
         }
     }
