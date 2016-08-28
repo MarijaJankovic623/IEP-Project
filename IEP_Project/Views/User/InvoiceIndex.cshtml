@@ -1,0 +1,45 @@
+﻿@model IEnumerable<IEP_Project.Models.Invoice>
+
+@{
+    ViewBag.Title = "Invoices";
+}
+
+<h2>Index</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.tokenNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.pricePerToken)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.creatingDateTime)
+        </th>
+        
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.tokenNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.pricePerToken)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.creatingDateTime)
+        </td>
+      
+    </tr>
+}
+
+</table>

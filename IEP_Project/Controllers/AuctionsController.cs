@@ -14,7 +14,6 @@ namespace IEP_Project.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-
         /*
          * Image is not required, 
          * When open button is pressed, entity changes his status and starting date
@@ -44,14 +43,11 @@ namespace IEP_Project.Controllers
             return RedirectToAction("Index");
 
         }
-
-
         // GET: Auctions
         public ActionResult Index()
         {
             return View(db.Auctions.ToList());
         }
-
         // GET: Auctions/Details/5
         public ActionResult Details(int? id)
         {
@@ -66,8 +62,6 @@ namespace IEP_Project.Controllers
             }
             return View(auction);
         }
-
-
         //When first rendering a create view there is no error for image
         // GET: Auctions/Create
         public ActionResult Create()
@@ -76,9 +70,6 @@ namespace IEP_Project.Controllers
             return View();
         }
 
-
-
-
         /*
          * Image is not required in the database, 
          * When create button is pressed, we check if there is a picture,
@@ -86,8 +77,6 @@ namespace IEP_Project.Controllers
          * if there is we continue  creating an auction
          * SaveChanges can go without errors
          */
-
-
         // POST: Auctions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -126,7 +115,6 @@ namespace IEP_Project.Controllers
 
             return View(auction);
         }
-
         // GET: Auctions/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -141,8 +129,6 @@ namespace IEP_Project.Controllers
             }
             return View(auction);
         }
-
-
         /*
          * Because of null fields in entities when submiting an edit form
          * we need to find an entity from a database again, and rewrite fields that are not changed 
@@ -179,7 +165,6 @@ namespace IEP_Project.Controllers
 
             return View(auction);
         }
-
         // GET: Auctions/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -190,11 +175,10 @@ namespace IEP_Project.Controllers
             Auction auction = db.Auctions.Find(id);
             if (auction == null || auction.status != stateAuction.READY)
             {
-                return HttpNotFound();
+                return HttpNotFound(); 
             }
             return View(auction);
         }
-
         // POST: Auctions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

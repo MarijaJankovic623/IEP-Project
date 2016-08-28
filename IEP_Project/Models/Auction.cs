@@ -9,7 +9,7 @@ namespace IEP_Project.Models
 {
     public enum stateAuction
     {
-        DRAFT, READY, OPEN, SOLD, EXPIRED, DELETED
+        DRAFT, READY, OPEN, SOLD, EXPIRED, DELETED, ALL
     }
 
 

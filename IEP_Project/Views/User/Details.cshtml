@@ -1,6 +1,4 @@
-﻿using  System.Web.Mvc;
-
-@model IEP_Project.Models.Auction
+﻿@model IEP_Project.Models.Auction
 
 @{
     ViewBag.Title = "Details";
@@ -25,9 +23,7 @@
         </dt>
 
         <dd>
-            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)"  style="max-width:150px; max-height:150px"/>
-         
-           
+            @Html.DisplayFor(model => model.Image)
         </dd>
 
         <dt>
@@ -89,6 +85,6 @@
     </dl>
 </div>
 <p>
-   
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

@@ -1,0 +1,126 @@
+﻿using Microsoft.AspNet.Identity;
+
+@model IEnumerable<IEP_Project.Models.Auction>
+
+@{
+    ViewBag.Title = "Auctions";
+}
+
+<h2>Auctions</h2>
+<div class="container">
+    <div class='row'>
+        <div class="col-md-8 col-sm-8 col-xs-12">
+          
+                @using (Html.BeginForm())
+            {
+                    <h4>
+                        Product name:  @Html.TextBox("SearchString") <br />
+
+                        Minimum price: @Html.TextBox("minPrice", null, new { type = "number", min = "0", step = "1" })
+                        <br />
+
+                        Maximum price: @Html.TextBox("maxPrice", null, new { type = "number", min = "0", step = "1" })
+                        <br />
+
+                        <div id="radioList">
+                            Auction state:
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.ALL, true)
+                            @Html.Label("ALL STATES")
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.DRAFT)
+                            @Html.Label("DRAFT")
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.READY)
+                            @Html.Label("READY")
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.OPEN)
+                            @Html.Label("OPEN")
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.SOLD)
+                            @Html.Label("SOLD")
+                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.EXPIRED)
+                            @Html.Label("EXPIRED")
+
+                        </div>
+
+                        <br />
+                        <input type="submit" value="Search" />
+
+                      
+                    </h4>
+                    <hr />
+                }
+            </div>
+            
+
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="jumbotron">
+            <h3 style="color:black;">BUY TOKENS</h3>
+            <br />
+            <a id="c-mobile-payment-widget" href="@Url.Action("CreateInvoice", "User")" + User.Identity.GetUserId();><img src="https://www.centili.com/images/centili-widget-button.png" /></a>
+        </div>
+            </div>
+       
+        </div>
+    </div>
+
+
+
+
+    @{ var i = 0; }
+    <div class="container">
+        @foreach (var item in Model)
+            {
+                if (i % 4 == 0)
+                {
+
+                @Html.Raw("<div class='row'>")
+
+            }
+            i++;
+
+
+            <div class="col-md-3 col-sm-3 col-xs-12">
+
+                <div class="thumbnail">
+
+                    <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
+                    <br />
+                    <h3> <a class="thumbnail" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
+
+                    <br />
+                    <b> Initial price:</b>
+                    @Html.DisplayFor(modelItem => item.initialPrice)
+
+                    <br />
+                    <b>Price raise: </b>
+                    @Html.DisplayFor(modelItem => item.currentPriceRaise)
+
+                    <br />
+                    <b> Auction status: </b>
+                    @Html.DisplayFor(modelItem => item.status)
+                    <br />
+                    <b>Auction duration:</b>
+                    @Html.DisplayFor(modelItem => item.duration)
+
+                    <br />
+                    <b>Last bidder: </b>
+                    Maridzoli
+                    <br />
+                    <br />
+                    <br />
+                    @if (item.status == IEP_Project.Models.stateAuction.OPEN)
+                    {
+                        <button class="btn"><a class="thumbnail" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a> </button>
+                    }
+                </div>
+            </div>
+            if (i % 4 == 0)
+            {
+
+                @Html.Raw("</div>")
+
+            }
+
+
+
+        }
+
+
+    </div>

@@ -38,6 +38,9 @@ namespace IEP_Project.Models
         }
 
         public DbSet<Auction> Auctions { get; set; }
+        public DbSet<Bid> Bids { get; set; }
+
+        public DbSet<Invoice> Invoices { get; set; }
 
         public static ApplicationDbContext Create()
         {
