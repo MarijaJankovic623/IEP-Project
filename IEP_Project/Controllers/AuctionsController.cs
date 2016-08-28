@@ -15,7 +15,11 @@ namespace IEP_Project.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
 
-
+        /*
+         * Image is not required, 
+         * When open button is pressed, entity changes his status and starting date
+         * SaveChanges can go without errors
+         */
         public ActionResult Open(int? id)
         {
           
@@ -24,7 +28,7 @@ namespace IEP_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Auction auction = db.Auctions.Find(id);
-            if (auction == null)
+            if (auction == null || auction.status != stateAuction.READY)
             {
                 return HttpNotFound();
             }
@@ -63,12 +67,26 @@ namespace IEP_Project.Controllers
             return View(auction);
         }
 
+
+        //When first rendering a create view there is no error for image
         // GET: Auctions/Create
         public ActionResult Create()
         {
             ViewBag.ErrorPicture = "";
             return View();
         }
+
+
+
+
+        /*
+         * Image is not required in the database, 
+         * When create button is pressed, we check if there is a picture,
+         * if there isnt any picture, we return create view with an error, 
+         * if there is we continue  creating an auction
+         * SaveChanges can go without errors
+         */
+
 
         // POST: Auctions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -117,12 +135,20 @@ namespace IEP_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Auction auction = db.Auctions.Find(id);
-            if (auction == null)
+            if (auction == null || auction.status != stateAuction.READY)
             {
                 return HttpNotFound();
             }
             return View(auction);
         }
+
+
+        /*
+         * Because of null fields in entities when submiting an edit form
+         * we need to find an entity from a database again, and rewrite fields that are not changed 
+         * 
+         * So if an picture is uploaded than we chage the picture, if not we rewrite it. 
+         */
 
         // POST: Auctions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -131,15 +157,26 @@ namespace IEP_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,productName,initialPrice,duration")] Auction auction)
         {
+         
+            Auction auctionFromDatabase = db.Auctions.Find( auction.ID );
 
-            /*TODO kako da mi ne pregazi sve, da li moram kao debil da dohvatim iz baze ponovo */
+            if (auctionFromDatabase == null )
+            {
+                return HttpNotFound();
+            }
 
             if (ModelState.IsValid)
             {
-                db.Entry(auction).State = EntityState.Modified;
+                auctionFromDatabase.productName = auction.productName;
+                auctionFromDatabase.initialPrice = auction.initialPrice;
+                auctionFromDatabase.duration = auction.duration;
+
+               // db.Entry(auctionFromDatabase).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+
             }
+
             return View(auction);
         }
 
@@ -151,7 +188,7 @@ namespace IEP_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Auction auction = db.Auctions.Find(id);
-            if (auction == null)
+            if (auction == null || auction.status != stateAuction.READY)
             {
                 return HttpNotFound();
             }
