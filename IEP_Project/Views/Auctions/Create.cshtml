@@ -23,12 +23,15 @@
             </div>
         </div>
         <div class="form-group">
+
             @Html.LabelFor(model => model.ImageToUpload, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.ImageToUpload, new { type = "file" })
                 @Html.ValidationMessageFor(model => model.ImageToUpload, "", new { @class = "text-danger" })
             </div>
         </div>
+
+         <p>@ViewBag.ErrorPicture</p>
 
   <div class="form-group">
             @Html.LabelFor(model => model.initialPrice, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -38,53 +41,14 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.currentPriceRaise, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.currentPriceRaise, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.currentPriceRaise, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.status, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.status, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
+      
         <div class="form-group">
             @Html.LabelFor(model => model.duration, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.duration, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.duration, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.creatingDateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.creatingDateTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.creatingDateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.startingDateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.startingDateTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.startingDateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.finishingDateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.finishingDateTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.finishingDateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
+       </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

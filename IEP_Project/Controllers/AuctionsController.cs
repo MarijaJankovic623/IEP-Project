@@ -14,6 +14,34 @@ namespace IEP_Project.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+
+
+        public ActionResult Open(int? id)
+        {
+          
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Auction auction = db.Auctions.Find(id);
+            if (auction == null)
+            {
+                return HttpNotFound();
+            }
+
+            auction.status = stateAuction.OPEN;
+            auction.startingDateTime = DateTime.Now;
+            auction.finishingDateTime = DateTime.Now;
+
+            db.Entry(auction).State = EntityState.Modified;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+
+        }
+
+
         // GET: Auctions
         public ActionResult Index()
         {
@@ -38,6 +66,7 @@ namespace IEP_Project.Controllers
         // GET: Auctions/Create
         public ActionResult Create()
         {
+            ViewBag.ErrorPicture = "";
             return View();
         }
 
@@ -46,11 +75,27 @@ namespace IEP_Project.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,productName,ImageToUpload,initialPrice,currentPriceRaise,status,duration,creatingDateTime,startingDateTime,finishingDateTime")] Auction auction)
+        public ActionResult Create([Bind(Include = "ID,productName,ImageToUpload,initialPrice,duration")] Auction auction)
         {
+
+            if (auction.ImageToUpload == null) {
+                ViewBag.ErrorPicture = "Please upload picture for auction";
+                return View(auction);
+            }
+
+
             if (ModelState.IsValid)
             {
                 // Convert HttpPostedFileBase to byte array.
+
+                auction.currentPriceRaise = 0;
+                auction.status = stateAuction.READY;
+                auction.creatingDateTime = DateTime.Now;
+                auction.startingDateTime = DateTime.Now;
+                auction.finishingDateTime = DateTime.Now;
+                
+
+
                 auction.Image = new byte[auction.ImageToUpload.ContentLength];
                 auction.ImageToUpload.InputStream.Read(auction.Image, 0, auction.Image.Length);
 
@@ -84,8 +129,11 @@ namespace IEP_Project.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,productName,Image,initialPrice,currentPriceRaise,status,duration,creatingDateTime,startingDateTime,finishingDateTime")] Auction auction)
+        public ActionResult Edit([Bind(Include = "ID,productName,initialPrice,duration")] Auction auction)
         {
+
+            /*TODO kako da mi ne pregazi sve, da li moram kao debil da dohvatim iz baze ponovo */
+
             if (ModelState.IsValid)
             {
                 db.Entry(auction).State = EntityState.Modified;
@@ -116,7 +164,9 @@ namespace IEP_Project.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Auction auction = db.Auctions.Find(id);
-            db.Auctions.Remove(auction);
+            auction.status = stateAuction.DRAFT;
+            db.Entry(auction).State = EntityState.Modified;
+            
             db.SaveChanges();
             return RedirectToAction("Index");
         }

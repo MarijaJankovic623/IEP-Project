@@ -71,9 +71,16 @@
             @Html.DisplayFor(modelItem => item.finishingDateTime)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Details", "Details", new { id = item.ID }) <br />
+         
+            @if (@item.status == IEP_Project.Models.stateAuction.READY)
+            {
+
+            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <br />
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID })   <br />
+            @Html.ActionLink("Open", "Open", new { id = item.ID }) }
+
+            
         </td>
     </tr>
 }

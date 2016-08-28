@@ -18,7 +18,7 @@ namespace IEP_Project.Models
         public int ID { get; set; }
         public string productName { get; set; }
 
-        [NotMapped, Required]
+        [NotMapped]
         public HttpPostedFileBase ImageToUpload { get; set; }
 
         public byte[] Image { get; set; }
