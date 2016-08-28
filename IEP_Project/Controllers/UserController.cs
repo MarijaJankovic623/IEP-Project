@@ -138,24 +138,25 @@ namespace IEP_Project.Controllers
         }
 
 
-        public ActionResult InvoiceResponse(string status, string clientId)
+        public ActionResult InvoiceResponse(string status, string clientId, float price)
         {
-            
-            Invoice invoice = new Invoice();
-            invoice.creatingDateTime = DateTime.Now;
-            invoice.status = stateInvoice.CREATED;
-            invoice.user = db.Users.Find(User.Identity.GetUserId());
 
-            db.Invoices.Add(invoice);
+            Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
+            if (!status.Equals("ACCEPTED")) { invoice.status = stateInvoice.FULFILLED; }
+            else { invoice.status = stateInvoice.ABORTED; }
+            invoice.priceForPackage = (int)(price);
+            invoice.tokenNumber = invoice.priceForPackage / 50;
+
+
+
+            db.Entry(invoice).State = EntityState.Modified;
             db.SaveChanges();
-
-
 
 
             return RedirectToAction("InvoiceIndex");
         }
 
-
+        //http://localhost:48254/User/InvoiceResponse?status=%22ACCEPTED%22&clientid=1&price=50
 
 
 
@@ -172,7 +173,7 @@ namespace IEP_Project.Controllers
 
             }
 
-            return View(invoices.ToList());
+            return View(invoices);
         }
 
         protected override void Dispose(bool disposing)

@@ -14,7 +14,7 @@ namespace IEP_Project.Models
         public int ID { get; set; }
         public int tokenNumber { get; set; }
 
-        public int pricePerToken { get; set; }
+        public int priceForPackage { get; set; }
 
         public stateInvoice status { get; set; }
 

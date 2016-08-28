@@ -212,6 +212,10 @@
     <Compile Include="Migrations\201608271728140_IEPProjectDatabaseV1.Designer.cs">
       <DependentUpon>201608271728140_IEPProjectDatabaseV1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608282047278_Invoice has been changed.cs" />
+    <Compile Include="Migrations\201608282047278_Invoice has been changed.Designer.cs">
+      <DependentUpon>201608282047278_Invoice has been changed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Auction.cs" />
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608271728140_IEPProjectDatabaseV1.resx">
       <DependentUpon>201608271728140_IEPProjectDatabaseV1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608282047278_Invoice has been changed.resx">
+      <DependentUpon>201608282047278_Invoice has been changed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
