@@ -13,7 +13,7 @@ namespace IEP_Project.Controllers
     public class UserController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+      
         public ActionResult Index(string searchString, stateAuction? AuctionStates, int? minPrice, int? maxPrice)
         {
             var auctions = from m in db.Auctions
@@ -52,10 +52,6 @@ namespace IEP_Project.Controllers
             return View(auctions);
         }
 
-
-
-      
-
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
@@ -71,9 +67,7 @@ namespace IEP_Project.Controllers
             return View(auction);
         }
 
-
-
-        
+        [Authorize(Roles = "USER")]
         public ActionResult BidNow(int? id)
         {
             if (id == null)
@@ -88,15 +82,14 @@ namespace IEP_Project.Controllers
             }
 
             ApplicationUser user = db.Users.Find( User.Identity.GetUserId());
-            /*user.tokenNumber == 0*/
-            if (user == null)
+
+            if (user == null || user.tokenNumber == 0)
             {
                 return HttpNotFound();
             }
 
 
-
-           // user.tokenNumber--;
+            user.tokenNumber--;
             auction.currentPriceRaise++;
            
 
@@ -119,6 +112,7 @@ namespace IEP_Project.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "USER")]
         public ActionResult CreateInvoice() {
             var centili = "http://stage.centili.com/widget/WidgetModule?api=4390916c1cade5d6cbb749e567530b5f&clientid=" + User.Identity.GetUserId();
 
@@ -137,7 +131,7 @@ namespace IEP_Project.Controllers
         
         }
 
-
+       
         public ActionResult InvoiceResponse(string status, string clientId, float price)
         {
 
@@ -147,9 +141,11 @@ namespace IEP_Project.Controllers
             invoice.priceForPackage = (int)(price);
             invoice.tokenNumber = invoice.priceForPackage / 50;
 
-
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            user.tokenNumber += invoice.tokenNumber;
 
             db.Entry(invoice).State = EntityState.Modified;
+            db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
 
 
@@ -159,7 +155,7 @@ namespace IEP_Project.Controllers
         //http://localhost:48254/User/InvoiceResponse?status=%22ACCEPTED%22&clientid=1&price=50
 
 
-
+        [Authorize(Roles = "USER")]
         public ActionResult InvoiceIndex()
         {
             var invoices = from m in db.Invoices
@@ -173,9 +169,10 @@ namespace IEP_Project.Controllers
 
             }
 
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            ViewBag.currentTokens = user.tokenNumber;
             return View(invoices);
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

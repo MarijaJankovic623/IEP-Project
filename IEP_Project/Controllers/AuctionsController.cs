@@ -10,6 +10,7 @@ using IEP_Project.Models;
 
 namespace IEP_Project.Controllers
 {
+    [Authorize(Roles = "ADMINISTRATOR")]
     public class AuctionsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

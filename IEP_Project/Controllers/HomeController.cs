@@ -10,7 +10,8 @@ namespace IEP_Project.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index","User");
+            // return View();
         }
 
         public ActionResult About()

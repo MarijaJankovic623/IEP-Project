@@ -4,42 +4,63 @@
     ViewBag.Title = "Invoices";
 }
 
-<h2>Index</h2>
+<h2>TOKENS</h2>
 
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.tokenNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.priceForPackage)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.creatingDateTime)
-        </th>
-        
-    </tr>
+<h3>Currently you have: @ViewBag.currentTokens tokens</h3>
+<hr />
+<h1>Your invoices:</h1>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.tokenNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.priceForPackage)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.creatingDateTime)
-        </td>
-      
-    </tr>
-}
 
-</table>
+
+@{ var i = 0; }
+<div class="container">
+    @foreach (var item in Model)
+            {
+                if (i % 4 == 0)
+                {
+
+            @Html.Raw("<div class='row'>")
+        }
+        i++;
+
+
+        <div class="col-md-3 col-sm-3 col-xs-12">
+
+            <div class="thumbnail">
+                <br />
+
+                <br />
+                <b> Number of tokens:</b>
+                @Html.DisplayFor(modelItem => item.tokenNumber)
+
+                <br />
+                <b>Price for package: </b>
+                @Html.DisplayFor(modelItem => item.priceForPackage)
+                <br />
+                <b> Invoice status: </b>
+                @Html.DisplayFor(modelItem => item.status)
+                <br />
+                <b>Created:</b>
+                @Html.DisplayFor(modelItem => item.creatingDateTime)
+
+                <br />
+
+ 
+            </div>
+        </div>
+        if (i % 4 == 0)
+        {
+
+            @Html.Raw("</div>")
+
+        }
+
+
+
+    }
+
+
+</div>
+
+
