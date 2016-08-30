@@ -35,6 +35,8 @@ namespace IEP_Project.Models
         public DateTime startingDateTime { get; set; }
         public DateTime finishingDateTime { get; set; }
 
+        public  virtual ApplicationUser lastBidder { get; set; }
+
         public virtual ICollection<Bid> auctionBidds { get; set; }
 
     }

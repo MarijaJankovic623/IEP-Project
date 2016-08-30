@@ -158,7 +158,7 @@ namespace IEP_Project.Controllers
                 auctionFromDatabase.initialPrice = auction.initialPrice;
                 auctionFromDatabase.duration = auction.duration;
 
-               // db.Entry(auctionFromDatabase).State = EntityState.Modified;
+                db.Entry(auctionFromDatabase).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
 

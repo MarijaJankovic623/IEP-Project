@@ -1,4 +1,5 @@
-﻿@model IEP_Project.Models.Auction
+﻿@using Microsoft.AspNet.Identity;
+@model IEnumerable<IEP_Project.Models.Bid>
 
 @{
     ViewBag.Title = "Details";
@@ -6,85 +7,103 @@
 
 <h2>Details</h2>
 
-<div>
+
     <h4>Auction</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.productName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.productName)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
+<div class="container">
 
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
+        <div class="col-md-3 col-sm-3 col-xs-12">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.initialPrice)
-        </dt>
+            <div class="thumbnail">
 
-        <dd>
-            @Html.DisplayFor(model => model.initialPrice)
-        </dd>
+                <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(  @ViewBag.auction.Image)" style="max-width:150px; max-height:150px" />
+                <br />
+                <h3> <a class="thumbnail" href="#" style="color:black;"> @ViewBag.auction.productName </a> </h3>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.currentPriceRaise)
-        </dt>
+                <br />
+                <b> Initial price:</b>
+                @ViewBag.auction.initialPrice
+              
 
-        <dd>
-            @Html.DisplayFor(model => model.currentPriceRaise)
-        </dd>
+                <br />
+                <b>Price raise: </b>
+                @ViewBag.auction.currentPriceRaise
 
-        <dt>
-            @Html.DisplayNameFor(model => model.status)
-        </dt>
+                <br />
+                <b> Auction status: </b>
+                @ViewBag.auction.status
+              
+                <br />
+                <b>Auction duration:</b>
+                @ViewBag.auction.duration
+             
 
-        <dd>
-            @Html.DisplayFor(model => model.status)
-        </dd>
+                <br />
+                <b>Last bidder: </b>
+                @if (ViewBag.auction.lastBidder != null)
+                {   @ViewBag.auction.lastBidder.Email}
+                
 
-        <dt>
-            @Html.DisplayNameFor(model => model.duration)
-        </dt>
+                <br />
+                <br />
+                <br />
+                @if (@ViewBag.auction.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
+                {
+                    <button class="btn"><a class="thumbnail" href="@Url.Action("BidNow", "User", new { id =    @ViewBag.auction.ID })" style="color:black;">BID NOW</a> </button>
+                }
+                else
+                {
+                    <br />
+                    <br />
 
-        <dd>
-            @Html.DisplayFor(model => model.duration)
-        </dd>
+                }
+            </div>
+        </div>
+      
 
-        <dt>
-            @Html.DisplayNameFor(model => model.creatingDateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.creatingDateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.startingDateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.startingDateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.finishingDateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.finishingDateTime)
-        </dd>
-
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@{ var i = 0; }
+<div class="container">
+    @foreach (var item in Model) {
+        if (i == 9) { break; }
+        if (i % 4 == 0)
+        {
+
+            @Html.Raw("<div class='row'>")
+
+        }
+        i++;
+
+
+        <div class="col-md-3 col-sm-3 col-xs-12">
+
+            <div class="thumbnail">
+
+             
+                <b> Sent time:</b>
+                @Html.DisplayFor(modelItem => item.sentTime)
+
+                <br />
+                <b>User: </b>
+                @Html.DisplayFor(modelItem => item.user.Email)
+
+                <br />
+               
+            </div>
+        </div>
+        if (i % 4 == 0)
+        {
+
+            @Html.Raw("</div>")
+
+        }
+
+
+
+    }
+
+
+</div>

@@ -12,7 +12,5 @@ namespace IEP_Project.Models
 
         public virtual ApplicationUser user { get; set; }
         public virtual Auction auction { get; set; }
-
-
     }
 }

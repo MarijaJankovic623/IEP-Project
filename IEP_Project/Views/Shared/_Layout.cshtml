@@ -35,7 +35,7 @@
                 <ul class="nav navbar-nav">
 @if (HttpContext.Current.User.IsInRole("USER"))
 {
-                    <li>@Html.ActionLink("Profile", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Profile", "EditProfile", "User")</li>
                     <li>@Html.ActionLink("Tokens", "InvoiceIndex", "User")</li>
 }
                  

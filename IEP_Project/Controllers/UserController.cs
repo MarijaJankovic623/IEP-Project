@@ -13,11 +13,11 @@ namespace IEP_Project.Controllers
     public class UserController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-      
+
         public ActionResult Index(string searchString, stateAuction? AuctionStates, int? minPrice, int? maxPrice)
         {
             var auctions = from m in db.Auctions
-                         select m;
+                           select m;
 
 
             if (AuctionStates != null && AuctionStates != stateAuction.ALL)
@@ -28,13 +28,14 @@ namespace IEP_Project.Controllers
             }
 
 
-            if (minPrice != null ) {
+            if (minPrice != null)
+            {
 
-                auctions = auctions.Where(i=> i.initialPrice >minPrice);
+                auctions = auctions.Where(i => i.initialPrice > minPrice);
 
             }
 
-            if(maxPrice != null)
+            if (maxPrice != null)
             {
                 auctions = auctions.Where(i => i.initialPrice < maxPrice);
 
@@ -43,18 +44,18 @@ namespace IEP_Project.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 auctions = auctions.Where(s => s.productName.Contains(searchString));
-              
+
             }
 
 
 
-
-            return View(auctions);
+            return View(auctions.OrderByDescending(auction => auction.startingDateTime).ToList());
         }
-
+        [Authorize(Roles = "USER")]
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -64,7 +65,9 @@ namespace IEP_Project.Controllers
             {
                 return HttpNotFound();
             }
-            return View(auction);
+
+            ViewBag.auction = auction;
+            return View(auction.auctionBidds.OrderByDescending(bid => bid.sentTime).ToList());
         }
 
         [Authorize(Roles = "USER")]
@@ -81,7 +84,7 @@ namespace IEP_Project.Controllers
                 return HttpNotFound();
             }
 
-            ApplicationUser user = db.Users.Find( User.Identity.GetUserId());
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
 
             if (user == null || user.tokenNumber == 0)
             {
@@ -91,29 +94,30 @@ namespace IEP_Project.Controllers
 
             user.tokenNumber--;
             auction.currentPriceRaise++;
-           
+            auction.lastBidder = user;
 
             Bid bid = new Bid();
             bid.auction = auction;
             bid.sentTime = DateTime.Now;
             if (auction.duration < 10) { auction.duration = 10; }
-                 
+
             bid.user = user;
 
-            
+
 
             db.Entry(user).State = EntityState.Modified;
             db.Entry(auction).State = EntityState.Modified;
 
             db.Bids.Add(bid);
-            
+
             db.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "USER")]
-        public ActionResult CreateInvoice() {
+        public ActionResult CreateInvoice()
+        {
             var centili = "http://stage.centili.com/widget/WidgetModule?api=4390916c1cade5d6cbb749e567530b5f&clientid=" + User.Identity.GetUserId();
 
             Invoice invoice = new Invoice();
@@ -124,14 +128,14 @@ namespace IEP_Project.Controllers
             db.Invoices.Add(invoice);
             db.SaveChanges();
 
-            
+
 
             return Redirect(centili);
 
-        
+
         }
 
-       
+
         public ActionResult InvoiceResponse(string status, string clientId, float price)
         {
 
@@ -161,8 +165,8 @@ namespace IEP_Project.Controllers
             var invoices = from m in db.Invoices
                            select m;
 
-       
-            if ( invoices != null)
+
+            if (invoices != null)
             {
                 String userID = User.Identity.GetUserId();
                 invoices = invoices.Where(i => i.user.Id.Equals(userID));
@@ -173,6 +177,47 @@ namespace IEP_Project.Controllers
             ViewBag.currentTokens = user.tokenNumber;
             return View(invoices);
         }
+
+
+        public ActionResult EditProfile()
+        {
+           
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // POST: User/EditProfile/5
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile([Bind(Include = "id,name,lastname")] ApplicationUser user)
+        {
+            string idUser = user.Id;
+            ApplicationUser userFromDatabase = db.Users.Find(User.Identity.GetUserId());
+
+            if (userFromDatabase == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                userFromDatabase.name = user.name;
+                userFromDatabase.lastname = user.lastname;
+
+                db.Entry(userFromDatabase).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+
+            return View(user);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -181,5 +226,6 @@ namespace IEP_Project.Controllers
             }
             base.Dispose(disposing);
         }
-    }
+
+    } 
 }
