@@ -9,13 +9,16 @@ using System.Web.Mvc;
 using IEP_Project.Models;
 using Microsoft.AspNet.Identity;
 namespace IEP_Project.Controllers
-{
+{//ovde je auctionTriger u details-u i indexu 
     public class UserController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public ActionResult Index(string searchString, stateAuction? AuctionStates, int? minPrice, int? maxPrice)
         {
+
+            auctionTrigger();
+            
             var auctions = from m in db.Auctions
                            select m;
 
@@ -47,14 +50,20 @@ namespace IEP_Project.Controllers
 
             }
 
+            foreach (Auction a in auctions)
+            {
+             
+            }
 
+            db.SaveChanges();
 
             return View(auctions.OrderByDescending(auction => auction.startingDateTime).ToList());
         }
-        [Authorize(Roles = "USER")]
+       
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
+            auctionTrigger();
 
             if (id == null)
             {
@@ -73,6 +82,7 @@ namespace IEP_Project.Controllers
         [Authorize(Roles = "USER")]
         public ActionResult BidNow(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -86,9 +96,14 @@ namespace IEP_Project.Controllers
 
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
 
-            if (user == null || user.tokenNumber == 0)
+            if (user == null )
             {
                 return HttpNotFound();
+            }
+
+            if (user.tokenNumber == 0) {
+                
+                return RedirectToAction("Index");
             }
 
 
@@ -99,7 +114,10 @@ namespace IEP_Project.Controllers
             Bid bid = new Bid();
             bid.auction = auction;
             bid.sentTime = DateTime.Now;
-            if (auction.duration < 10) { auction.duration = 10; }
+            if (auction.duration < 10) {
+                auction.duration = 10;
+                auction.finishingDateTime = auction.finishingDateTime.AddSeconds(10);
+            }
 
             bid.user = user;
 
@@ -140,6 +158,7 @@ namespace IEP_Project.Controllers
         {
 
             Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
+            if (invoice == null) { return HttpNotFound(); }
             if (!status.Equals("ACCEPTED")) { invoice.status = stateInvoice.FULFILLED; }
             else { invoice.status = stateInvoice.ABORTED; }
             invoice.priceForPackage = (int)(price);
@@ -218,6 +237,42 @@ namespace IEP_Project.Controllers
             return View(user);
         }
 
+
+        public void auctionTrigger()
+        {
+
+            var auctions = db.Auctions;
+            foreach (Auction a in auctions)
+            {
+
+                if (a.status == stateAuction.OPEN)
+                {
+                    DateTime finishingTime = a.finishingDateTime;
+                    TimeSpan timePassed = finishingTime.Subtract(DateTime.Now);
+
+                    if ((int)timePassed.TotalSeconds > 0) a.duration = (int)timePassed.TotalSeconds;
+                    else a.duration = 0;
+
+
+                    if (a.duration == 0 && a.lastBidder == null)
+                    {
+                        a.status = stateAuction.EXPIRED;
+
+                    }
+                    if (a.duration == 0 && a.lastBidder != null)
+                    {
+                        a.status = stateAuction.SOLD;
+
+                    }
+
+                }
+            }
+
+
+            db.SaveChanges();
+
+
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

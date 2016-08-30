@@ -27,7 +27,9 @@ namespace IEP_Project.Models
 
         public int currentPriceRaise { get; set; }
 
+
         public stateAuction status { get; set; }
+
 
         public int duration { get; set; }
 
@@ -35,9 +37,10 @@ namespace IEP_Project.Models
         public DateTime startingDateTime { get; set; }
         public DateTime finishingDateTime { get; set; }
 
-        public  virtual ApplicationUser lastBidder { get; set; }
+        public virtual ApplicationUser lastBidder { get; set; }
 
         public virtual ICollection<Bid> auctionBidds { get; set; }
+
 
     }
 }

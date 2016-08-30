@@ -24,9 +24,9 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" style="max-width:150px; max-height:150px" />
 
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.initialPrice)
         </dt>

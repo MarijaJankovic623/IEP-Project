@@ -220,6 +220,18 @@
     <Compile Include="Migrations\201608292219397_Added user to auction.Designer.cs">
       <DependentUpon>201608292219397_Added user to auction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608302023512_status.cs" />
+    <Compile Include="Migrations\201608302023512_status.Designer.cs">
+      <DependentUpon>201608302023512_status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608302228273_sttus vol 2.cs" />
+    <Compile Include="Migrations\201608302228273_sttus vol 2.Designer.cs">
+      <DependentUpon>201608302228273_sttus vol 2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608302237549_again .cs" />
+    <Compile Include="Migrations\201608302237549_again .Designer.cs">
+      <DependentUpon>201608302237549_again .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Auction.cs" />
@@ -328,6 +340,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608292219397_Added user to auction.resx">
       <DependentUpon>201608292219397_Added user to auction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608302023512_status.resx">
+      <DependentUpon>201608302023512_status.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608302228273_sttus vol 2.resx">
+      <DependentUpon>201608302228273_sttus vol 2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608302237549_again .resx">
+      <DependentUpon>201608302237549_again .cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

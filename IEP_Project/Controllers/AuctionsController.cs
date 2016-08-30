@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using IEP_Project.Models;
 
+//auction triger je u details i index metodi
 namespace IEP_Project.Controllers
 {
     [Authorize(Roles = "ADMINISTRATOR")]
@@ -35,7 +36,8 @@ namespace IEP_Project.Controllers
 
             auction.status = stateAuction.OPEN;
             auction.startingDateTime = DateTime.Now;
-            auction.finishingDateTime = DateTime.Now;
+            double duration = auction.duration;
+            auction.finishingDateTime = auction.startingDateTime.AddSeconds(duration);
 
             db.Entry(auction).State = EntityState.Modified;
 
@@ -47,11 +49,13 @@ namespace IEP_Project.Controllers
         // GET: Auctions
         public ActionResult Index()
         {
+            auctionTrigger();
             return View(db.Auctions.ToList());
         }
         // GET: Auctions/Details/5
         public ActionResult Details(int? id)
         {
+            auctionTrigger();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -119,6 +123,7 @@ namespace IEP_Project.Controllers
         // GET: Auctions/Edit/5
         public ActionResult Edit(int? id)
         {
+           
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -169,6 +174,8 @@ namespace IEP_Project.Controllers
         // GET: Auctions/Delete/5
         public ActionResult Delete(int? id)
         {
+           
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -185,6 +192,7 @@ namespace IEP_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+           
             Auction auction = db.Auctions.Find(id);
             auction.status = stateAuction.DRAFT;
             db.Entry(auction).State = EntityState.Modified;
@@ -192,6 +200,45 @@ namespace IEP_Project.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        public void auctionTrigger() {
+
+            var auctions = db.Auctions;
+            foreach (Auction a in auctions)
+            {
+
+                if (a.status == stateAuction.OPEN)
+                {
+                    DateTime finishingTime = a.finishingDateTime;
+                    TimeSpan timePassed = finishingTime.Subtract(DateTime.Now);
+
+                    if ((int)timePassed.TotalSeconds > 0) a.duration = (int)timePassed.TotalSeconds;
+                    else a.duration = 0;
+
+
+                    if (a.duration == 0 && a.lastBidder == null)
+                    {
+                        a.status = stateAuction.EXPIRED;
+
+                    }
+                    if (a.duration == 0 && a.lastBidder != null)
+                    {
+                        a.status = stateAuction.SOLD;
+
+                    }
+
+                }
+            }
+
+
+            db.SaveChanges();
+
+
+        }
+
+
+
 
         protected override void Dispose(bool disposing)
         {
