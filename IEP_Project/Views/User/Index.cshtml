@@ -83,34 +83,36 @@
 
                 <div class="thumbnail">
 
+                    <input type="hidden" class="id" value= @Html.DisplayFor(modelItem => item.ID) />
+
                     <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
                     <br />
-                    <h3> <a class="thumbnail" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
+                    <h3> <a id="name" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
 
                     <br />
                     <b> Initial price:</b>
-                    @Html.DisplayFor(modelItem => item.initialPrice)
+                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.initialPrice)</p>
 
                     <br />
                     <b>Price raise: </b>
-                    @Html.DisplayFor(modelItem => item.currentPriceRaise)
+                    <p id="currentPriceRaise"> @Html.DisplayFor(modelItem => item.currentPriceRaise)</p>
 
                     <br />
                     <b> Auction status: </b>
-                    @Html.DisplayFor(modelItem => item.status)
+                    <p class="status">@Html.DisplayFor(modelItem => item.status)</p>
                     <br />
                     <b>Auction duration:</b>
-                    @Html.DisplayFor(modelItem => item.duration)
+                    <p id="duration">@Html.DisplayFor(modelItem => item.duration) </p>
 
                     <br />
                     <b>Last bidder: </b>
-                    @Html.DisplayFor(modelItem => item.lastBidder.Email)
+                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.lastBidder.Email)</p>
                     <br />
                     <br />
                     <br />
                     @if (item.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
                     {
-                        <button class="btn"><a class="thumbnail" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a> </button>
+                        <button class="btn"><a class="" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a> </button>
                     }
                     else {
                         <br />
@@ -132,3 +134,56 @@
 
 
     </div>
+
+
+
+@section scripts {
+   
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+  
+    <script src="~/signalr/hubs"></script>
+    
+    <script>
+        $(function () {
+            var MyHub = $.connection.myHub;
+
+            MyHub.client.refresh = function (id, productName, currentPriceRaise, status, duration, lastBidder) {
+                
+         
+                $(".thumbnail").each(function () {
+                    auctionID = $(this).find(".id").val();
+                    auctionID = parseInt(auctionID);
+
+                    if (auctionID == id) {
+                        $(this).find("#name").text(productName);
+
+                        $(this).find("#currentPriceRaise").text(currentPriceRaise);
+
+                        $(this).find("#status").text(status);
+
+                        $(this).find("#duration").text(duration);
+
+                        $(this).find("#lastBidder").text(lastBidder);
+                    }
+
+                })
+
+            };
+
+            $.connection.hub.start().done(function () {
+
+                setInterval(function () {
+                    var idArray = new Array();
+                    $(".thumbnail .id").each(function () {
+                        idArray.push($(this).val());
+                    })
+
+                    MyHub.server.refresh(idArray);
+                }, 1000);
+
+            });
+        });
+
+
+    </script>
+}
