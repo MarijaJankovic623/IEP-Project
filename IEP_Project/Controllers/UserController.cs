@@ -238,6 +238,8 @@ namespace IEP_Project.Controllers
         }
 
 
+
+    
         public void auctionTrigger()
         {
 
@@ -253,6 +255,7 @@ namespace IEP_Project.Controllers
                     if ((int)timePassed.TotalSeconds > 0) a.duration = (int)timePassed.TotalSeconds;
                     else a.duration = 0;
 
+                    ApplicationUser lastBidder = null;
 
                     if (a.duration == 0 && a.lastBidder == null)
                     {
