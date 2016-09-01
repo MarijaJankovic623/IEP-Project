@@ -50,10 +50,8 @@ namespace IEP_Project.Controllers
 
             }
 
-            foreach (Auction a in auctions)
-            {
-             
-            }
+       
+
 
             db.SaveChanges();
 
@@ -243,7 +241,7 @@ namespace IEP_Project.Controllers
         public void auctionTrigger()
         {
 
-            var auctions = db.Auctions;
+            var auctions = db.Auctions.ToList();
             foreach (Auction a in auctions)
             {
 
@@ -260,7 +258,7 @@ namespace IEP_Project.Controllers
                     if (a.duration == 0 && a.lastBidder == null)
                     {
                         a.status = stateAuction.EXPIRED;
-
+                        
                     }
                     if (a.duration == 0 && a.lastBidder != null)
                     {

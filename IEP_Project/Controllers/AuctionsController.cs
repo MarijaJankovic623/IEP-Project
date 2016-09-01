@@ -204,7 +204,7 @@ namespace IEP_Project.Controllers
 
         public void auctionTrigger() {
 
-            var auctions = db.Auctions;
+            var auctions = db.Auctions.ToList();
             foreach (Auction a in auctions)
             {
 
