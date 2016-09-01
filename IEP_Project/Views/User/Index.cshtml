@@ -112,7 +112,7 @@
                     <br />
                     @if (item.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
                     {
-                        <button class="btn"><a class="" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a> </button>
+                      <a class="btn" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a>
                     }
                     else {
                         <br />

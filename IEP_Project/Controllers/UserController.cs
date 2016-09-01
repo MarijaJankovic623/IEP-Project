@@ -235,7 +235,32 @@ namespace IEP_Project.Controllers
             return View(user);
         }
 
+        public ActionResult soldAuctions() {
 
+            auctionTrigger();
+
+            var auctions = from m in db.Auctions
+                           select m;
+
+
+            String userID = User.Identity.GetUserId();
+
+
+            if (auctions != null)
+            {
+                auctions = auctions.Where(a => a.status == stateAuction.SOLD );
+               
+            }
+
+
+            if (auctions != null)
+            {
+              
+                auctions = auctions.Where(a => a.lastBidder.Id.Equals(userID));
+            }
+
+            return View(auctions.ToList());
+        }
 
     
         public void auctionTrigger()
@@ -274,6 +299,9 @@ namespace IEP_Project.Controllers
 
 
         }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
