@@ -47,7 +47,7 @@
                 <br />
                 @if (@ViewBag.auction.status  == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
                 {
-                    <a class="btn bidding-button" href="@Url.Action("BidNow", "User", new { id = @ViewBag.auction.ID  })" style="color:black;" data-id = @ViewBag.auction.ID>BID NOW</a>
+                    <a class="btn bidding-button" style="color:black;" data-id = @ViewBag.auction.ID>BID NOW</a>
                 }
                 else
                 {
@@ -136,7 +136,7 @@
                     })
 
                     MyHub.server.refresh(idArray);
-                }, 1000);
+                }, 500);
 
                 $(".bidding-button").each(
                     function () {
@@ -145,7 +145,7 @@
 
                             id = $(this).attr('data-id');
                             price = $(this).parent().find("#currentPriceRaise").text();
-                        
+                            MyHub.server.bidNow(id, price);
                         });
 
 

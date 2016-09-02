@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using IEP_Project.Models;
 using Microsoft.AspNet.Identity;
+
 namespace IEP_Project.Controllers
 {//ovde je auctionTriger u details-u i indexu 
     public class UserController : Controller

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using IEP_Project.Models;
+using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 
 namespace IEP_Project.Hubs
 {
@@ -45,10 +47,72 @@ namespace IEP_Project.Hubs
                 bids += " </p> ";
                 Clients.Caller.refresh(a.ID, a.productName, a.currentPriceRaise, a.status.ToString(), a.duration, (a.lastBidder != null ? a.lastBidder.UserName : null), bids);
             }
-                
 
+            db.Dispose();
         }
 
+        [Authorize(Roles = "USER")]
+        public void bidNow(int id,int currentPriceRaise) {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            if (id == null)
+            {
+                //vrati poruku
+                return ;
+            }
+
+            Auction auction = db.Auctions.Find(id);
+            if (auction == null || auction.status != stateAuction.OPEN)
+            {
+                //vrati poruku
+                return;
+            }
+
+            ApplicationUser user = db.Users.Find(Context.User.Identity.GetUserId());
+
+            if (user == null)
+            {
+                //vrati poruku
+                return;
+            }
+
+            if (user.tokenNumber == 0)
+            {
+
+                //vrati poruku
+                return;
+            }
+
+
+            user.tokenNumber--;
+            auction.currentPriceRaise++;
+            auction.lastBidder = user;
+
+            Bid bid = new Bid();
+            bid.auction = auction;
+            bid.sentTime = DateTime.Now;
+            if (auction.duration < 10)
+            {
+                auction.duration = 10;
+                auction.finishingDateTime = auction.finishingDateTime.AddSeconds(10);
+            }
+
+            bid.user = user;
+
+
+
+            db.Entry(user).State = EntityState.Modified;
+            db.Entry(auction).State = EntityState.Modified;
+
+            db.Bids.Add(bid);
+
+            db.SaveChanges();
+            db.Dispose();
+            return ;
+
+
+
+        }
         public void auctionTrigger(ApplicationDbContext db)
         {
 
@@ -85,5 +149,8 @@ namespace IEP_Project.Hubs
 
 
         }
+
+
+
     }
 }
