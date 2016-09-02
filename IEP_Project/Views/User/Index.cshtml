@@ -1,6 +1,9 @@
 ﻿
 @using Microsoft.AspNet.Identity;
-@model IEnumerable<IEP_Project.Models.Auction>
+@model PagedList.IPagedList<IEP_Project.Models.Auction>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
 
 @{
     ViewBag.Title = "Auctions";
@@ -13,9 +16,10 @@
     <div class='row'>
         <div class="col-md-8 col-sm-8 col-xs-12">
           
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("Index", "User", FormMethod.Get))
             {
                     <h4>
+                       
                         Product name:  @Html.TextBox("SearchString") <br />
 
                         Minimum price: @Html.TextBox("minPrice", null, new { type = "number", min = "0", step = "1" })
@@ -135,7 +139,11 @@
 
     </div>
 
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { searchString = ViewBag.searchString, AuctionStates = ViewBag.AuctionStates, minPrice = ViewBag.minPrice, maxPrice = ViewBag.maxPrice,  page }))
 
 @section scripts {
    

@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using IEP_Project.Models;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace IEP_Project.Controllers
 {//ovde je auctionTriger u details-u i indexu 
@@ -15,8 +16,15 @@ namespace IEP_Project.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Index(string searchString, stateAuction? AuctionStates, int? minPrice, int? maxPrice)
+        public ActionResult Index(string searchString, stateAuction? AuctionStates, int? minPrice, int? maxPrice, int? page)
         {
+
+            ViewBag.searchString = searchString;
+            ViewBag.AuctionStates = AuctionStates;
+            ViewBag.minPrice = minPrice;
+            ViewBag.maxPrice = maxPrice;
+
+            
 
             auctionTrigger();
             
@@ -56,7 +64,12 @@ namespace IEP_Project.Controllers
 
             db.SaveChanges();
 
-            return View(auctions.OrderByDescending(auction => auction.startingDateTime).ToList());
+            int pageSize = 9;
+            int pageNumber = (page ?? 1);
+           
+        
+
+            return View(auctions.OrderByDescending(auction => auction.startingDateTime).ToPagedList(pageNumber, pageSize));
         }
        
         // GET: User/Details/5
@@ -135,7 +148,7 @@ namespace IEP_Project.Controllers
         [Authorize(Roles = "USER")]
         public ActionResult CreateInvoice()
         {
-            var centili = "https://stage.centili.com/widget/WidgetModule?api=09105f938dcd29be5efbb29fa67b88fd&clientId=" + User.Identity.GetUserId();
+            var centili = "https://stage.centili.com/widget/WidgetModule?api=09105f938dcd29be5efbb29fa67b88fd&clientid=" + User.Identity.GetUserId();
 
             Invoice invoice = new Invoice();
             invoice.creatingDateTime = DateTime.Now;
@@ -156,16 +169,15 @@ namespace IEP_Project.Controllers
 
 
         //http://localhost:48254/User/InvoiceSuccess?clientid=17&price=50
-        public ActionResult InvoiceSuccess( string clientId, float price)
+        public void InvoiceSuccess( int amount, string transactionid, string status, double enduserprice, string clientid)
         {
 
-            Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
-            if (invoice == null) { return HttpNotFound(); }
+            Invoice invoice = db.Invoices.Find(Int32.Parse(clientid));
+            if (invoice == null) { return ; }
 
             invoice.status = stateInvoice.FULFILLED;
-            invoice.priceForPackage = (int)(price);
-            invoice.tokenNumber = invoice.priceForPackage / 50;
-
+            invoice.priceForPackage = amount * 50;
+            invoice.tokenNumber = amount;
             ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
             user.tokenNumber += invoice.tokenNumber;
 
@@ -174,7 +186,7 @@ namespace IEP_Project.Controllers
             db.SaveChanges();
 
 
-            return RedirectToAction("InvoiceIndex");
+            //return RedirectToAction("InvoiceIndex");
         }
 
 
