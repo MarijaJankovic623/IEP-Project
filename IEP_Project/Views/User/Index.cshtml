@@ -112,7 +112,7 @@
                     <br />
                     @if (item.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
                     {
-                      <a class="btn" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;">BID NOW</a>
+                      <a class="btn bidding-button" href="@Url.Action("BidNow", "User", new { id = item.ID })" style="color:black;" data-id = @Html.DisplayFor(modelItem => item.ID)>BID NOW</a>
                     }
                     else {
                         <br />
@@ -181,6 +181,19 @@
                     MyHub.server.refresh(idArray);
                 }, 1000);
 
+
+                $(".bidding-button").each(
+                    function () {
+
+                        $(this).click(function () {
+
+                            id = $(this).attr('data-id');
+                            price = $(this).parent().find("#currentPriceRaise").text();
+                            alert(price);
+                        });
+
+
+                    });
             });
         });
 
