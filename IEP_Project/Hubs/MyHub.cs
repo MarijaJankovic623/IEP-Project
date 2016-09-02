@@ -45,7 +45,7 @@ namespace IEP_Project.Hubs
 
                 }
                 bids += " </p> ";
-                Clients.Caller.refresh(a.ID, a.productName, a.currentPriceRaise, a.status.ToString(), a.duration, (a.lastBidder != null ? a.lastBidder.UserName : null), bids);
+                Clients.Caller.refresh(a.ID, a.productName, a.currentPriceRaise, a.status.ToString(), a.duration, (a.lastBidder != null ? a.lastBidder.UserName : " "), bids);
             }
 
             db.Dispose();

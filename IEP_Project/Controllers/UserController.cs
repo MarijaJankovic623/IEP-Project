@@ -64,7 +64,7 @@ namespace IEP_Project.Controllers
 
             db.SaveChanges();
 
-            int pageSize = 9;
+            int pageSize = 8;
             int pageNumber = (page ?? 1);
            
         
