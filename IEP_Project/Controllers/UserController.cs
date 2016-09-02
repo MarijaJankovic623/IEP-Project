@@ -153,13 +153,41 @@ namespace IEP_Project.Controllers
         }
 
 
-        public ActionResult InvoiceResponse(string status, string clientId, float price)
+
+
+        //http://localhost:48254/User/InvoiceSuccess?clientid=17&price=50
+        public ActionResult InvoiceSuccess( string clientId, float price)
         {
 
             Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
             if (invoice == null) { return HttpNotFound(); }
-            if (!status.Equals("ACCEPTED")) { invoice.status = stateInvoice.FULFILLED; }
-            else { invoice.status = stateInvoice.ABORTED; }
+
+            invoice.status = stateInvoice.FULFILLED;
+            invoice.priceForPackage = (int)(price);
+            invoice.tokenNumber = invoice.priceForPackage / 50;
+
+            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
+            user.tokenNumber += invoice.tokenNumber;
+
+            db.Entry(invoice).State = EntityState.Modified;
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+
+
+            return RedirectToAction("InvoiceIndex");
+        }
+
+
+
+
+        //http://localhost:48254/User/InvoiceFailure?clientid=17&price=50
+        public ActionResult InvoiceFailure(string status, string clientId, float price)
+        {
+
+            Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
+            if (invoice == null) { return HttpNotFound(); }
+          
+            invoice.status = stateInvoice.ABORTED;
             invoice.priceForPackage = (int)(price);
             invoice.tokenNumber = invoice.priceForPackage / 50;
 
