@@ -21,9 +21,29 @@ namespace IEP_Project.Hubs
             auctions = auctions.Where(a => auctionIds.Contains(a.ID));
             var auctions1 = auctions.ToList();
 
-            foreach (Auction a in auctions1) {
 
-                Clients.Caller.refresh(a.ID, a.productName, a.currentPriceRaise, a.status.ToString(), a.duration, (a.lastBidder != null ? a.lastBidder.UserName : null));
+          
+            foreach (Auction a in auctions1) {
+                var auctionbids = a.auctionBidds;
+
+                string bids = " <p> ";
+                foreach (Bid bid in auctionbids.OrderByDescending(b => b.sentTime).Take(10)) {
+
+                    bids += "<b>";
+                    bids += "   Sent time:   ";
+                    bids += "</b>";
+                    bids += bid.sentTime;
+                    bids += "</br>";
+                    bids += "<b>";
+                    bids += "   User:   ";
+                    bids += bid.user.Email;
+                    bids += "</b>";
+                    bids += "</br>";
+
+
+                }
+                bids += " </p> ";
+                Clients.Caller.refresh(a.ID, a.productName, a.currentPriceRaise, a.status.ToString(), a.duration, (a.lastBidder != null ? a.lastBidder.UserName : null), bids);
             }
                 
 

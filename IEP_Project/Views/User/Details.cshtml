@@ -15,95 +15,129 @@
 <div class="container">
 
         <div class="col-md-3 col-sm-3 col-xs-12">
-
             <div class="thumbnail">
 
-                <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(  @ViewBag.auction.Image)" style="max-width:150px; max-height:150px" />
+                <input type="hidden" class="id" value= @ViewBag.auction.ID />
+
+                <img class="img-responsive"  src="data:image;base64,@System.Convert.ToBase64String(  @ViewBag.auction.Image)" style="max-width:150px; max-height:150px" />
                 <br />
-                <h3> <a class="thumbnail" href="#" style="color:black;"> @ViewBag.auction.productName </a> </h3>
+                <h3>@ViewBag.auction.productName</h3>
 
                 <br />
                 <b> Initial price:</b>
-                @ViewBag.auction.initialPrice
-              
+                <p id="initialPrice" > @ViewBag.auction.initialPrice</p>
 
                 <br />
                 <b>Price raise: </b>
-                @ViewBag.auction.currentPriceRaise
+                <p id="currentPriceRaise">@ViewBag.auction.currentPriceRaise</p>
 
                 <br />
                 <b> Auction status: </b>
-                @ViewBag.auction.status
-              
+                <p id="status">@ViewBag.auction.status</p>
                 <br />
                 <b>Auction duration:</b>
-                @ViewBag.auction.duration
-             
+                <p id="duration">@ViewBag.auction.duration </p>
 
                 <br />
                 <b>Last bidder: </b>
                 @if (ViewBag.auction.lastBidder != null)
-                {   @ViewBag.auction.lastBidder.Email}
-                
-
+                {   @ViewBag.auction.lastBidder.Email }
                 <br />
                 <br />
                 <br />
-                @if (@ViewBag.auction.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
+                @if (@ViewBag.auction.status  == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
                 {
-                    <button class="btn"><a class="thumbnail" href="@Url.Action("BidNow", "User", new { id =    @ViewBag.auction.ID })" style="color:black;">BID NOW</a> </button>
+                    <a class="btn" href="@Url.Action("BidNow", "User", new { id = @ViewBag.auction.ID  })" style="color:black;">BID NOW</a>
                 }
                 else
                 {
                     <br />
-                    <br />
+                        <br />
 
                 }
             </div>
+
         </div>
-      
 
-</div>
-
-@{ var i = 0; }
-<div class="container">
-    @foreach (var item in Model) {
-        if (i == 9) { break; }
-        if (i % 4 == 0)
-        {
-
-            @Html.Raw("<div class='row'>")
-
-        }
-        i++;
 
 
         <div class="col-md-3 col-sm-3 col-xs-12">
 
-            <div class="thumbnail">
-
-             
-                <b> Sent time:</b>
-                @Html.DisplayFor(modelItem => item.sentTime)
-
-                <br />
-                <b>User: </b>
-                @Html.DisplayFor(modelItem => item.user.Email)
-
-                <br />
-               
+            <div class="well" id="bidds">
+                <p>
+                    @foreach (var item in Model)
+                    {
+                        <b>   Sent time:   </b>
+                        @Html.DisplayFor(modelItem => item.sentTime)
+                        
+                        <br />
+                        <b>   User:   </b>
+                        @Html.DisplayFor(modelItem => item.user.Email)
+                        <br />
+                    }
+                </p>
             </div>
         </div>
-        if (i % 4 == 0)
-        {
-
-            @Html.Raw("</div>")
-
-        }
-
-
-
-    }
+      
 
 
 </div>
+
+
+
+
+
+@section scripts {
+
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+
+    <script src="~/signalr/hubs"></script>
+
+    <script>
+        $(function () {
+            var MyHub = $.connection.myHub;
+
+            MyHub.client.refresh = function (id, productName, currentPriceRaise, status, duration, lastBidder,bidds) {
+
+               
+                $(".thumbnail").each(function () {
+                    auctionID = $(this).find(".id").val();
+                    auctionID = parseInt(auctionID);
+
+                    if (auctionID == id) {
+                        $(this).find("#name").text(productName);
+
+                        $(this).find("#currentPriceRaise").text(currentPriceRaise);
+
+                        $(this).find("#status").text(status);
+
+                        $(this).find("#duration").text(duration);
+
+                        $(this).find("#lastBidder").text(lastBidder);
+
+                       
+                    }
+                  
+
+                })
+                $(".well").empty().append($.parseHTML(bidds));
+              
+            };
+
+            $.connection.hub.start().done(function () {
+
+                setInterval(function () {
+                    var idArray = new Array();
+                    $(".thumbnail .id").each(function () {
+                        idArray.push($(this).val());
+                    })
+
+                    MyHub.server.refresh(idArray);
+                }, 1000);
+
+            });
+        });
+
+
+    </script>
+}
