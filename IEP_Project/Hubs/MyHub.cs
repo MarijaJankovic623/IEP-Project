@@ -93,8 +93,9 @@ namespace IEP_Project.Hubs
             bid.sentTime = DateTime.Now;
             if (auction.duration < 10)
             {
+               
+                auction.finishingDateTime = auction.finishingDateTime.AddSeconds(10 - auction.duration);
                 auction.duration = 10;
-                auction.finishingDateTime = auction.finishingDateTime.AddSeconds(10);
             }
 
             bid.user = user;

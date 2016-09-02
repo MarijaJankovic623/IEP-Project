@@ -147,7 +147,7 @@ namespace IEP_Project.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,productName,initialPrice,duration")] Auction auction)
+        public ActionResult Edit([Bind(Include = "ID,initialPrice")] Auction auction)
         {
          
             Auction auctionFromDatabase = db.Auctions.Find( auction.ID );
@@ -159,9 +159,9 @@ namespace IEP_Project.Controllers
 
             if (ModelState.IsValid)
             {
-                auctionFromDatabase.productName = auction.productName;
+           
                 auctionFromDatabase.initialPrice = auction.initialPrice;
-                auctionFromDatabase.duration = auction.duration;
+          
 
                 db.Entry(auctionFromDatabase).State = EntityState.Modified;
                 db.SaveChanges();

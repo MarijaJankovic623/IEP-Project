@@ -135,7 +135,7 @@ namespace IEP_Project.Controllers
         [Authorize(Roles = "USER")]
         public ActionResult CreateInvoice()
         {
-            var centili = "http://stage.centili.com/widget/WidgetModule?api=4390916c1cade5d6cbb749e567530b5f&clientid=" + User.Identity.GetUserId();
+            var centili = "https://stage.centili.com/widget/WidgetModule?api=09105f938dcd29be5efbb29fa67b88fd&clientId=" + User.Identity.GetUserId();
 
             Invoice invoice = new Invoice();
             invoice.creatingDateTime = DateTime.Now;
@@ -212,7 +212,7 @@ namespace IEP_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfile([Bind(Include = "id,name,lastname")] ApplicationUser user)
+        public ActionResult EditProfile([Bind(Include = "id,email,name,lastname")] ApplicationUser user)
         {
             string idUser = user.Id;
             ApplicationUser userFromDatabase = db.Users.Find(User.Identity.GetUserId());
@@ -224,6 +224,8 @@ namespace IEP_Project.Controllers
 
             if (ModelState.IsValid)
             {
+                userFromDatabase.Email = user.Email;
+                userFromDatabase.UserName = user.Email;
                 userFromDatabase.name = user.name;
                 userFromDatabase.lastname = user.lastname;
 
