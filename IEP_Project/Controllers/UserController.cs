@@ -169,7 +169,7 @@ namespace IEP_Project.Controllers
 
 
         //http://localhost:48254/User/InvoiceSuccess?clientid=17&price=50
-        public void InvoiceSuccess( int amount, string transactionid, string status, double enduserprice, string clientid)
+        public void InvoiceSuccess( int amount, string clientid)
         {
 
             Invoice invoice = db.Invoices.Find(Int32.Parse(clientid));
@@ -178,40 +178,39 @@ namespace IEP_Project.Controllers
             invoice.status = stateInvoice.FULFILLED;
             invoice.priceForPackage = amount * 50;
             invoice.tokenNumber = amount;
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            user.tokenNumber += invoice.tokenNumber;
+
+            invoice.user.tokenNumber += invoice.tokenNumber;
 
             db.Entry(invoice).State = EntityState.Modified;
-            db.Entry(user).State = EntityState.Modified;
+            db.Entry(invoice.user).State = EntityState.Modified;
             db.SaveChanges();
 
 
-            //return RedirectToAction("InvoiceIndex");
         }
 
 
 
 
         //http://localhost:48254/User/InvoiceFailure?clientid=17&price=50
-        public ActionResult InvoiceFailure(string status, string clientId, float price)
+        public void InvoiceFailure(int amount, string clientid)
         {
 
-            Invoice invoice = db.Invoices.Find(Int32.Parse(clientId));
-            if (invoice == null) { return HttpNotFound(); }
+            Invoice invoice = db.Invoices.Find(Int32.Parse(clientid));
+          
           
             invoice.status = stateInvoice.ABORTED;
-            invoice.priceForPackage = (int)(price);
-            invoice.tokenNumber = invoice.priceForPackage / 50;
+            invoice.priceForPackage = amount * 50;
+            invoice.tokenNumber = amount;
 
-            ApplicationUser user = db.Users.Find(User.Identity.GetUserId());
-            user.tokenNumber += invoice.tokenNumber;
+
+            invoice.user.tokenNumber += invoice.tokenNumber;
 
             db.Entry(invoice).State = EntityState.Modified;
-            db.Entry(user).State = EntityState.Modified;
+            db.Entry(invoice.user).State = EntityState.Modified;
             db.SaveChanges();
 
 
-            return RedirectToAction("InvoiceIndex");
+           
         }
 
         //http://localhost:48254/User/InvoiceResponse?status=%22ACCEPTED%22&clientid=1&price=50

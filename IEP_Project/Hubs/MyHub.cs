@@ -31,15 +31,10 @@ namespace IEP_Project.Hubs
                 string bids = " <p> ";
                 foreach (Bid bid in auctionbids.OrderByDescending(b => b.sentTime).Take(10)) {
 
-                    bids += "<b>";
-                    bids += "   Sent time:   ";
-                    bids += "</b>";
-                    bids += bid.sentTime;
-                    bids += "</br>";
-                    bids += "<b>";
-                    bids += "   User:   ";
+                    bids += " <b> LAST BIDDER: </b>";
+                
                     bids += bid.user.Email;
-                    bids += "</b>";
+
                     bids += "</br>";
 
 
@@ -50,6 +45,7 @@ namespace IEP_Project.Hubs
 
             db.Dispose();
         }
+
 
         [Authorize(Roles = "USER")]
         public void bidNow(int id,int currentPriceRaise) {

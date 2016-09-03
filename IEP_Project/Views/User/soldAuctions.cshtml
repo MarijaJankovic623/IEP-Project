@@ -5,65 +5,68 @@
 @{
     ViewBag.Title = "myAuctions";
 }
+<div class="container mycont">
+    <h2 style="font-family:'Comic Sans MS';">My auctions</h2>
 
-<h2>My auctions</h2>
 
-@{ var i = 0; }
-<div class="container">
-    @foreach (var item in Model)
+
+    @{ var i = 0; }
+    <div class="container mycont">
+        @foreach (var item in Model)
             {
                 if (i % 4 == 0)
                 {
 
-            @Html.Raw("<div class='row'>")
+                @Html.Raw("<div class='row'>")
 
-        }
-        i++;
+            }
+            i++;
 
 
-        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="col-md-3 col-sm-3 col-xs-12">
 
-            <div class="thumbnail">
+                <div class="thumbnail">
 
-                <input type="hidden" class="id" value=@Html.DisplayFor(modelItem => item.ID) />
+                    <input type="hidden" class="id" value=@Html.DisplayFor(modelItem => item.ID) />
 
-                <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
-                <br />
-                <h3> <a id="name" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
+                    <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
+                    <br />
+                    <h3> <a id="name" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
 
-                <br />
-                <b> Initial price:</b>
-                <p id="initialPrice">@Html.DisplayFor(modelItem => item.initialPrice)</p>
+                    <br />
+                    <b> Initial price:</b>
+                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.initialPrice)</p>
 
-                <br />
-                <b>Price raise: </b>
-                <p id="currentPriceRaise"> @Html.DisplayFor(modelItem => item.currentPriceRaise)</p>
+                    <br />
+                    <b>Price raise: </b>
+                    <p id="currentPriceRaise"> @Html.DisplayFor(modelItem => item.currentPriceRaise)</p>
 
-                <br />
-                <b> Auction status: </b>
-                <p class="status">@Html.DisplayFor(modelItem => item.status)</p>
-                <br />
-                <b>Auction duration:</b>
-                <p id="duration">@Html.DisplayFor(modelItem => item.duration) </p>
+                    <br />
+                    <b> Auction status: </b>
+                    <p class="status">@Html.DisplayFor(modelItem => item.status)</p>
+                    <br />
+                    <b>Auction duration:</b>
+                    <p id="duration">@Html.DisplayFor(modelItem => item.duration) </p>
 
-                <br />
-                <b>Last bidder: </b>
-                <p id="initialPrice">@Html.DisplayFor(modelItem => item.lastBidder.Email)</p>
-                <br />
-                <br />
-               
+                    <br />
+                    <b>Last bidder: </b>
+                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.lastBidder.Email)</p>
+                    <br />
+                    <br />
+
+                </div>
             </div>
-        </div>
-        if (i % 4 == 0)
-        {
+            if (i % 4 == 0)
+            {
 
-            @Html.Raw("</div>")
+                @Html.Raw("</div>")
+
+            }
+
+
 
         }
 
 
-
-    }
-
-
+    </div>
 </div>

@@ -5,56 +5,43 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="container mycont">
+    <h2 style="font-family:'Comic Sans MS';">Details</h2>
 
-
-    <h4>Auction</h4>
-    <hr />
-
-
-<div class="container">
 
         <div class="col-md-3 col-sm-3 col-xs-12">
             <div class="thumbnail">
 
-                <input type="hidden" class="id" value= @ViewBag.auction.ID />
+                <input type="hidden" class="id" value=@ViewBag.auction.ID />
 
-                <img class="img-responsive"  src="data:image;base64,@System.Convert.ToBase64String(  @ViewBag.auction.Image)" style="max-width:150px; max-height:150px" />
-                <br />
+                <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(  @ViewBag.auction.Image)" style="max-width:150px; max-height:150px" />
+                </hr>
                 <h3>@ViewBag.auction.productName</h3>
 
-                <br />
+                </hr>
                 <b> Initial price:</b>
-                <p id="initialPrice" > @ViewBag.auction.initialPrice</p>
+                <p id="initialPrice"> @ViewBag.auction.initialPrice</p>
 
-                <br />
                 <b>Price raise: </b>
                 <p id="currentPriceRaise">@ViewBag.auction.currentPriceRaise</p>
 
-                <br />
+
                 <b> Auction status: </b>
                 <p id="status">@ViewBag.auction.status</p>
-                <br />
+               
                 <b>Auction duration:</b>
                 <p id="duration">@ViewBag.auction.duration </p>
 
-                <br />
+               
                 <b>Last bidder: </b>
-                @if (ViewBag.auction.lastBidder != null)
-                {   @ViewBag.auction.lastBidder.Email }
-                <br />
-                <br />
-                <br />
-                @if (@ViewBag.auction.status  == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
-                {
-                    <a class="btn bidding-button" style="color:black;" data-id = @ViewBag.auction.ID>BID NOW</a>
-                }
-                else
-                {
-                    <br />
-                        <br />
+                <p id="lastBidder">@if (ViewBag.auction.lastBidder != null) {  @ViewBag.auction.lastBidder.Email }</p>
 
+                </hr>
+                @if (@ViewBag.auction.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
+                {
+                    <a class="btn  bidding-button  btn-default btn-block" style="background-color: #222222;color: white;"  data-id=@ViewBag.auction.ID>BID NOW</a>
                 }
+               
             </div>
 
         </div>
@@ -67,93 +54,89 @@
                 <p>
                     @foreach (var item in Model)
                     {
-                        <b>   Sent time:   </b>
-                        @Html.DisplayFor(modelItem => item.sentTime)
-                        
-                        <br />
-                        <b>   User:   </b>
+                      <b> LAST BIDDER: </b>
                         @Html.DisplayFor(modelItem => item.user.Email)
                         <br />
                     }
                 </p>
             </div>
         </div>
-      
-
-
-</div>
 
 
 
 
-
-@section scripts {
-
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-
-    <script src="~/signalr/hubs"></script>
-
-    <script>
-        $(function () {
-            var MyHub = $.connection.myHub;
-
-            MyHub.client.refresh = function (id, productName, currentPriceRaise, status, duration, lastBidder,bidds) {
-
-               
-                $(".thumbnail").each(function () {
-                    auctionID = $(this).find(".id").val();
-                    auctionID = parseInt(auctionID);
-
-                    if (auctionID == id) {
-                        $(this).find("#name").text(productName);
-
-                        $(this).find("#currentPriceRaise").text(currentPriceRaise);
-
-                        $(this).find("#status").text(status);
-
-                        $(this).find("#duration").text(duration);
-
-                        $(this).find("#lastBidder").text(lastBidder);
-
-                       
-                    }
-                  
-
-                })
-                $(".well").empty().append($.parseHTML(bidds));
+    </div>
+    </div>
 
 
-               
-              
-            };
 
-            $.connection.hub.start().done(function () {
+    @section scripts {
 
-                setInterval(function () {
-                    var idArray = new Array();
-                    $(".thumbnail .id").each(function () {
-                        idArray.push($(this).val());
+        <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+
+        <script src="~/signalr/hubs"></script>
+
+        <script>
+            $(function () {
+                var MyHub = $.connection.myHub;
+
+                MyHub.client.refresh = function (id, productName, currentPriceRaise, status, duration, lastBidder, bidds) {
+
+
+                    $(".thumbnail").each(function () {
+                        auctionID = $(this).find(".id").val();
+                        auctionID = parseInt(auctionID);
+
+                        if (auctionID == id) {
+                            $(this).find("#name").text(productName);
+
+                            $(this).find("#currentPriceRaise").text(currentPriceRaise);
+
+                            $(this).find("#status").text(status);
+
+                            $(this).find("#duration").text(duration);
+
+                            $(this).find("#lastBidder").text(lastBidder);
+
+
+                        }
+
+
                     })
+                    $(".well").empty().append($.parseHTML(bidds));
 
-                    MyHub.server.refresh(idArray);
-                }, 500);
 
-                $(".bidding-button").each(
-                    function () {
 
-                        $(this).click(function () {
 
-                            id = $(this).attr('data-id');
-                            price = $(this).parent().find("#currentPriceRaise").text();
-                            MyHub.server.bidNow(id, price);
+                };
+
+                $.connection.hub.start().done(function () {
+
+                    setInterval(function () {
+                        var idArray = new Array();
+                        $(".thumbnail .id").each(function () {
+                            idArray.push($(this).val());
+                        })
+
+                        MyHub.server.refresh(idArray);
+                    }, 500);
+
+                    $(".bidding-button").each(
+                        function () {
+
+                            $(this).click(function () {
+
+                                id = $(this).attr('data-id');
+                                price = $(this).parent().find("#currentPriceRaise").text();
+                                MyHub.server.bidNow(id, price);
+                            });
+
+
                         });
 
-
-                    });
-
+                });
             });
-        });
 
 
-    </script>
-}
+        </script>
+    }

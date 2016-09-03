@@ -2,7 +2,7 @@
 @using Microsoft.AspNet.Identity;
 @model PagedList.IPagedList<IEP_Project.Models.Auction>
 @using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
 
 
 @{
@@ -10,68 +10,107 @@
    
 }
 
-<h2>Auctions</h2>
 
-<div class="container">
+
+
+
+<div class="container mycont ">
+
+    <h2 style="font-family:'Comic Sans MS';">Auctions</h2>
     <div class='row'>
         <div class="col-md-8 col-sm-8 col-xs-12">
-          
-                @using (Html.BeginForm("Index", "User", FormMethod.Get))
+            <h4 style="font-family:'Comic Sans MS';">FIND BY:</h4>
+            <hr />
+
+            @using (Html.BeginForm("Index", "User", FormMethod.Get))
             {
-                    <h4>
-                       
-                        Product name:  @Html.TextBox("SearchString") <br />
 
-                        Minimum price: @Html.TextBox("minPrice", null, new { type = "number", min = "0", step = "1" })
-                        <br />
 
-                        Maximum price: @Html.TextBox("maxPrice", null, new { type = "number", min = "0", step = "1" })
-                        <br />
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <label>NAME:</label>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.TextBox("SearchString") <br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <label>MINIMUM PRICE:</label>
+                    </div>
 
-                        <div id="radioList">
-                            Auction state:
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.ALL, true)
-                            @Html.Label("ALL STATES")
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.DRAFT)
-                            @Html.Label("DRAFT")
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.READY)
-                            @Html.Label("READY")
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.OPEN)
-                            @Html.Label("OPEN")
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.SOLD)
-                            @Html.Label("SOLD")
-                            @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.EXPIRED)
-                            @Html.Label("EXPIRED")
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.TextBox("minPrice", null, new { type = "number", min = "0", step = "1" })
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <label>MAXIMUM PRICE:</label>
+                    </div>
+
+                    <div class=" col-md-6 col-sm-6 col-xs-12">
+                        @Html.TextBox("maxPrice", null, new { type = "number", min = "0", step = "1" })
+                    </div>
+                </div>
+                    <br />
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <div id="radioList">
+
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.ALL, true)
+                                    @Html.Label("ALL STATES")
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.DRAFT)
+                                    @Html.Label("DRAFT")
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.READY)
+                                    @Html.Label("READY")
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.OPEN)
+                                    @Html.Label("OPEN")
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.SOLD)
+                                    @Html.Label("SOLD")
+                                    @Html.RadioButton("AuctionStates", IEP_Project.Models.stateAuction.EXPIRED)
+                                    @Html.Label("EXPIRED")
+
+                                </div>
+
+                            </div>
                         </div>
+                        <hr />
+                            <div class="row">
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input class="btn  btn-block" type="submit" value="SEARCH" style="background-color: #75c4bf;"/>
 
-                        <br />
-                        <input type="submit" value="Search" />
+                                </div>
 
-                      
-                    </h4>
-                    <hr />
-                }
-            </div>
-            
-@if (HttpContext.Current.User.IsInRole("USER"))
-{
-        <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="jumbotron">
-            <h3 style="color:black;">BUY TOKENS</h3>
-            <br />
-            <a id="c-mobile-payment-widget" href="@Url.Action("CreateInvoice", "User")" + User.Identity.GetUserId();><img src="https://www.centili.com/images/centili-widget-button.png" /></a>
+                            </div>
+
+                            <hr />
+            }
         </div>
-            </div>
-}
-        </div>
-    </div>
+
+
+
+
+
+                                @if (HttpContext.Current.User.IsInRole("USER"))
+                                {
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        <div class="jumbotron">
+                                            <h3 style="color:black; font-family:'Comic Sans MS'">BUY TOKENS</h3>
+                                            <br />
+                                            <a id="c-mobile-payment-widget" href="@Url.Action("CreateInvoice", "User")" + User.Identity.GetUserId();><img src="https://www.centili.com/images/centili-widget-button.png" /></a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
 
 
 
 
     @{ var i = 0; }
-    <div class="container">
+    <div class="container mycont">
         @foreach (var item in Model)
             {
                 if (i % 4 == 0)
@@ -88,42 +127,37 @@
                 <div class="thumbnail">
 
                     <input type="hidden" class="id" value= @Html.DisplayFor(modelItem => item.ID) />
+                    
+                        <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
+                    <hr />     
+                        <h3> <a id="name" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;font-family:'Comic Sans MS';"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
+                    <hr />     
+                      
+                        <b> Initial price:</b>
+                        <p id="initialPrice">@Html.DisplayFor(modelItem => item.initialPrice)</p>
 
-                    <img class="img-responsive" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" style="max-width:150px; max-height:150px" />
-                    <br />
-                    <h3> <a id="name" href="@Url.Action("Details", "User", new { id = item.ID })" style="color:black;"> @Html.DisplayFor(modelItem => item.productName) </a> </h3>
+                        <b>Price raise: </b>
+                        <p id="currentPriceRaise"> @Html.DisplayFor(modelItem => item.currentPriceRaise)</p>
 
-                    <br />
-                    <b> Initial price:</b>
-                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.initialPrice)</p>
-
-                    <br />
-                    <b>Price raise: </b>
-                    <p id="currentPriceRaise"> @Html.DisplayFor(modelItem => item.currentPriceRaise)</p>
-
-                    <br />
-                    <b> Auction status: </b>
-                    <p id="status">@Html.DisplayFor(modelItem => item.status)</p>
-                    <br />
-                    <b>Auction duration:</b>
-                    <p id="duration">@Html.DisplayFor(modelItem => item.duration) </p>
-
-                    <br />
-                    <b>Last bidder: </b>
-                    <p id="initialPrice">@Html.DisplayFor(modelItem => item.lastBidder.Email)</p>
-                    <br />
-                    <br />
-                    <br />
-                    @if (item.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
-                    {
-                      <a class="btn bidding-button" style="color:black;" data-id = @Html.DisplayFor(modelItem => item.ID)>BID NOW</a>
-                    }
-                    else {
-                        <br />
-                        <br />
                        
-                    }
-                </div>
+                        <b> Auction status: </b>
+                        <p id="status">@Html.DisplayFor(modelItem => item.status)</p>
+                       
+                        <b>Auction duration:</b>
+                        <p id="duration">@Html.DisplayFor(modelItem => item.duration) </p>
+
+                      
+                        <b>Last bidder: </b>
+                   
+                        <p id="lastBidder">@Html.DisplayFor(modelItem => item.lastBidder.Email)</p>
+                        <hr/>     
+
+                        @if (item.status == IEP_Project.Models.stateAuction.OPEN && HttpContext.Current.User.IsInRole("USER"))
+                        {
+                            <a class="btn bidding-button  btn-default btn-block" style="background-color: #222222;color: white;" data-id=@Html.DisplayFor(modelItem => item.ID)>BID NOW</a>
+                        }
+
+                    </div>
             </div>
             if (i % 4 == 0)
             {

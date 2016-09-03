@@ -3,64 +3,62 @@
 @{
     ViewBag.Title = "Invoices";
 }
-
-<h2>TOKENS</h2>
-
-
-<h3>Currently you have: @ViewBag.currentTokens tokens</h3>
-<hr />
-<h1>Your invoices:</h1>
+<div class="container mycont">
+    <h2 style="font-family:'Comic Sans MS';">TOKENS</h2>
 
 
+    <h3 style="font-family:'Comic Sans MS';" >You have: @ViewBag.currentTokens tokens</h3>
+    <hr />
 
-@{ var i = 0; }
-<div class="container">
-    @foreach (var item in Model)
+
+    @{ var i = 0; }
+    <div class="container">
+        @foreach (var item in Model)
             {
                 if (i % 4 == 0)
                 {
 
-            @Html.Raw("<div class='row'>")
-        }
-        i++;
+                @Html.Raw("<div class='row'>")
+            }
+            i++;
 
 
-        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="col-md-3 col-sm-3 col-xs-12">
 
-            <div class="thumbnail">
-                <br />
+                <div class="thumbnail">
+                    <br />
 
-                <br />
-                <b> Number of tokens:</b>
-                @Html.DisplayFor(modelItem => item.tokenNumber)
+                    <br />
+                    <b> Number of tokens:</b>
+                    @Html.DisplayFor(modelItem => item.tokenNumber)
 
-                <br />
-                <b>Price for package: </b>
-                @Html.DisplayFor(modelItem => item.priceForPackage)
-                <br />
-                <b> Invoice status: </b>
-                @Html.DisplayFor(modelItem => item.status)
-                <br />
-                <b>Created:</b>
-                @Html.DisplayFor(modelItem => item.creatingDateTime)
+                    <br />
+                    <b>Price for package: </b>
+                    @Html.DisplayFor(modelItem => item.priceForPackage)
+                    <br />
+                    <b> Invoice status: </b>
+                    @Html.DisplayFor(modelItem => item.status)
+                    <br />
+                    <b>Created:</b>
+                    @Html.DisplayFor(modelItem => item.creatingDateTime)
 
-                <br />
+                    <br />
 
- 
+
+                </div>
             </div>
-        </div>
-        if (i % 4 == 0)
-        {
+            if (i % 4 == 0)
+            {
 
-            @Html.Raw("</div>")
+                @Html.Raw("</div>")
+
+            }
+
+
 
         }
 
 
-
-    }
-
-
+    </div>
 </div>
-
 
